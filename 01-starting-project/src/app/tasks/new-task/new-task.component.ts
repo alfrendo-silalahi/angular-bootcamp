@@ -1,26 +1,33 @@
 import {
   Component,
   EventEmitter,
+  Input,
   Output,
   signal,
   WritableSignal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import NewTask from './new-task.model';
+import { TasksService } from '../tasks.service';
 
 @Component({
   selector: 'app-new-task',
   standalone: true,
   imports: [FormsModule],
+  // providers: [TasksService],
   templateUrl: './new-task.component.html',
   styleUrl: './new-task.component.css',
 })
 export class NewTaskComponent {
-  @Output()
-  cancel: EventEmitter<void> = new EventEmitter<void>();
+  @Input({ required: true })
+  userId!: string;
 
   @Output()
-  add: EventEmitter<NewTask> = new EventEmitter<NewTask>();
+  close: EventEmitter<void> = new EventEmitter<void>();
+
+  // @Output()
+  // add: EventEmitter<NewTask> = new EventEmitter<NewTask>();
+
+  constructor(private taskService: TasksService) {}
 
   // Regular fields
   // enteredTitle: string = '';
@@ -33,14 +40,18 @@ export class NewTaskComponent {
   enteredDate: WritableSignal<string> = signal('');
 
   onCancel(): void {
-    this.cancel.emit();
+    this.close.emit();
   }
 
   onSubmit(): void {
-    this.add.emit({
-      title: this.enteredTitle(),
-      summary: this.enteredSummary(),
-      dueDate: this.enteredDate(),
-    });
+    this.taskService.addTask(
+      {
+        title: this.enteredTitle(),
+        summary: this.enteredSummary(),
+        dueDate: this.enteredDate(),
+      },
+      this.userId,
+    );
+    this.close.emit();
   }
 }
