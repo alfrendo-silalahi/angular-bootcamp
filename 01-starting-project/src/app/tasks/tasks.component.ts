@@ -1,6 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { TaskComponent } from './task/task.component';
 import { NewTaskComponent } from './new-task/new-task.component';
+import { Task } from './task/task.model';
+import NewTask from './new-task/new-task.model';
 
 @Component({
   selector: 'app-tasks',
@@ -10,12 +12,15 @@ import { NewTaskComponent } from './new-task/new-task.component';
   imports: [TaskComponent, NewTaskComponent],
 })
 export class TasksComponent {
-  @Input({ required: true }) id?: string;
-  @Input({ required: true }) name!: string;
+  @Input({ required: true })
+  id!: string;
+
+  @Input({ required: true })
+  name!: string;
 
   isAddingTask: boolean = false;
 
-  tasks = [
+  tasks: Task[] = [
     {
       id: 't1',
       userId: 'u1',
@@ -57,19 +62,32 @@ export class TasksComponent {
     },
   ];
 
-  get selectedUserTasks() {
-    return this.tasks.filter((task) => task.userId === this.id);
+  get selectedUserTasks(): Task[] {
+    return this.tasks.filter((task: Task): boolean => task.userId === this.id);
   }
 
-  onCompleteTask(id: string) {
-    this.tasks = this.tasks.filter((task) => task.id != id);
+  onCompleteTask(id: string): void {
+    this.tasks = this.tasks.filter((task: Task): boolean => task.id != id);
   }
 
-  onStartAddTask() {
+  onStartAddTask(): void {
     this.isAddingTask = true;
   }
 
-  onCancelAddTask() {
+  onCancelAddTask(): void {
+    this.isAddingTask = false;
+  }
+
+  onAddTask(taskData: NewTask): void {
+    this.tasks.unshift({
+      id: new Date().getTime().toString(),
+      title: taskData.title,
+      summary: taskData.summary,
+      dueDate: taskData.dueDate,
+      userId: this.id,
+    });
+
+    // Close the dialog
     this.isAddingTask = false;
   }
 }
