@@ -50,7 +50,7 @@ export class NewTaskComponent {
         summary: this.enteredSummary(),
         dueDate: this.enteredDate(),
       },
-      this.userId,
+      this.userId
     );
     this.close.emit();
   }

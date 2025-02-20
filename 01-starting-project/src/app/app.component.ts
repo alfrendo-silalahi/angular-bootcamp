@@ -22,7 +22,7 @@ export class AppComponent {
     )!;
   }
 
-  onSelectUser(id: string): void {
-    this.selectedUserId = id;
+  onSelectUser(userId: string): void {
+    this.selectedUserId = userId;
   }
 }

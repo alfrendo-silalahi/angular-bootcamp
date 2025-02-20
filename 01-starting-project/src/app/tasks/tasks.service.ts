@@ -7,7 +7,8 @@ import { Injectable } from '@angular/core';
 })
 export class TasksService {
   constructor() {
-    console.log('TasksService constructor initialized');
+    const tasks = localStorage.getItem('tasks');
+    if (tasks) this.tasks = JSON.parse(tasks);
   }
   private tasks: Task[] = [
     {
@@ -63,9 +64,15 @@ export class TasksService {
       dueDate: taskData.dueDate,
       userId: userId,
     });
+    this.saveTasks();
   }
 
   removeTask(taskId: string): void {
     this.tasks = this.tasks.filter((task: Task): boolean => task.id !== taskId);
+    this.saveTasks();
+  }
+
+  private saveTasks(): void {
+    localStorage.setItem('tasks', JSON.stringify(this.tasks));
   }
 }

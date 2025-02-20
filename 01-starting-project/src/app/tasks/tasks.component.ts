@@ -9,7 +9,6 @@ import { TasksService } from './tasks.service';
   standalone: true,
   templateUrl: './tasks.component.html',
   styleUrl: './tasks.component.css',
-  // providers: [TasksService],
   imports: [TaskComponent, NewTaskComponent],
 })
 export class TasksComponent {
@@ -19,16 +18,12 @@ export class TasksComponent {
   @Input({ required: true })
   name!: string;
 
-  constructor(private tasksService: TasksService) {}
+  constructor(private readonly tasksService: TasksService) {}
 
   isAddingTask: boolean = false;
 
   get selectedUserTasks(): Task[] {
     return this.tasksService.getUsersTasks(this.userId);
-  }
-
-  onCompleteTask(taskId: string): void {
-    this.tasksService.removeTask(taskId);
   }
 
   onStartAddTask(): void {
